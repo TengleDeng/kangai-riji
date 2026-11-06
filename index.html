@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#7A9B76" />
+  <meta name="description" content="抗癌日记 · 演示站 · 把这一天留给未来的自己" />
+  <title>抗癌日记</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600&family=Noto+Serif+SC:wght@500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js" defer></script>
+</head>
+<body>
+  <div id="app" class="phone-shell">
+    <!-- ===== LOGIN ===== -->
+    <section id="view-login" class="view view-login">
+      <div class="login-card">
+        <div class="login-brand">
+          <span class="leaf-icon" aria-hidden="true">🌿</span>
+          <h1>抗癌日记</h1>
+          <p class="login-tagline">把这一天留给未来的自己</p>
+        </div>
+        <form id="login-form" autocomplete="on">
+          <label class="field">
+            <span>用户名</span>
+            <input id="login-user" name="username" type="text" placeholder="请输入演示账号" required autocomplete="username" />
+          </label>
+          <label class="field">
+            <span>密码</span>
+            <input id="login-pass" name="password" type="password" placeholder="请输入演示密码" required autocomplete="current-password" />
+          </label>
+          <p id="login-error" class="login-error" hidden>账号或密码不正确</p>
+          <button type="submit" class="btn-primary btn-block">进入日记</button>
+        </form>
+        <p class="login-note">演示门禁 · 数据仅保存在本机浏览器</p>
+      </div>
+    </section>
+
+    <!-- ===== HOME ===== -->
+    <section id="view-home" class="view view-home" hidden>
+      <header class="top-bar">
+        <div class="brand-row">
+          <span class="leaf-icon">🌿</span>
+          <h1>抗癌日记</h1>
+          <span class="heart-icon">♡</span>
+        </div>
+        <button type="button" class="icon-btn logout-btn" id="btn-logout" title="退出">退出</button>
+      </header>
+      <p class="greeting">你好，今天也记录一点点</p>
+
+      <div class="hero-card" id="btn-start-record">
+        <span class="badge"><span class="leaf-sm">🍃</span> 今日一记</span>
+        <p class="hero-text">记录今天的心情、小确幸与点滴感悟。</p>
+        <div class="hero-actions">
+          <span class="chip"><span class="ico">📷</span> 拍照记录</span>
+          <span class="chip"><span class="ico">🎙️</span> 语音记录</span>
+        </div>
+        <button type="button" class="btn-primary btn-block">开始记录 ›</button>
+      </div>
+
+      <div class="section-head">
+        <h2>我的日记</h2>
+        <span class="muted">本地保存</span>
+      </div>
+      <div id="diary-list" class="diary-list"></div>
+      <p id="empty-hint" class="empty-hint" hidden>还没有日记。点上面「开始记录」，写下今天的一点点。</p>
+
+      <nav class="tab-bar">
+        <button type="button" class="tab active" data-tab="home"><span>🏠</span>首页</button>
+        <button type="button" class="tab" data-tab="record"><span>✏️</span>记录</button>
+        <button type="button" class="tab" data-tab="book"><span>📖</span>日记本</button>
+        <button type="button" class="tab" data-tab="me"><span>👤</span>我的</button>
+      </nav>
+    </section>
+
+    <!-- ===== RECORD ===== -->
+    <section id="view-record" class="view view-record" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="home">‹</button>
+        <h1>写一记</h1>
+        <span class="nav-spacer"></span>
+      </header>
+
+      <div class="record-body">
+        <label class="photo-drop" id="photo-drop">
+          <input type="file" id="photo-input" accept="image/*" capture="environment" multiple hidden />
+          <div class="photo-drop-inner">
+            <div class="photo-ico">🏞️</div>
+            <p>添加照片</p>
+            <p class="sub">记录今天的一刻 · 最美是日常</p>
+          </div>
+        </label>
+        <div id="photo-previews" class="photo-previews"></div>
+
+        <div class="voice-card">
+          <button type="button" id="btn-voice" class="voice-btn" aria-label="按住说话">🎙️</button>
+          <p class="voice-label" id="voice-label">按住说话</p>
+          <p class="sub">说几句今天的心情，本地模板帮你整理</p>
+          <p id="voice-status" class="voice-status" hidden></p>
+        </div>
+
+        <label class="text-field">
+          <span class="pencil">✏️</span>
+          <textarea id="raw-text" rows="3" placeholder="也可以打字…"></textarea>
+        </label>
+
+        <button type="button" id="btn-generate" class="btn-primary btn-block">生成日记 🍃</button>
+        <p class="demo-tip">演示：本地模板整理，不调用付费 AI</p>
+      </div>
+    </section>
+
+    <!-- ===== DIARY DETAIL ===== -->
+    <section id="view-diary" class="view view-diary" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="home">‹</button>
+        <h1>📖 AI 日记</h1>
+        <button type="button" class="icon-btn" id="btn-more" title="更多">⋯</button>
+      </header>
+
+      <article id="diary-article" class="diary-article">
+        <h2 id="diary-date-title" class="diary-date-title"></h2>
+        <div class="ornament">— 🍃 —</div>
+        <div id="diary-images" class="diary-images"></div>
+        <span class="ai-badge">✦ AI 已整理，可编辑</span>
+        <div id="diary-body" class="diary-body"></div>
+        <div id="diary-tags" class="diary-tags"></div>
+      </article>
+
+      <div id="edit-panel" class="edit-panel" hidden>
+        <textarea id="edit-title" rows="1" placeholder="标题"></textarea>
+        <textarea id="edit-body" rows="8" placeholder="正文"></textarea>
+        <div class="edit-actions">
+          <button type="button" id="btn-cancel-edit" class="btn-ghost">取消</button>
+          <button type="button" id="btn-save-edit" class="btn-primary">保存</button>
+        </div>
+      </div>
+
+      <div class="action-bar">
+        <button type="button" id="btn-edit"><span>✏️</span>编辑</button>
+        <button type="button" id="btn-longimg"><span>🖼️</span>生成长图</button>
+        <button type="button" id="btn-share"><span>🔗</span>分享给亲友</button>
+      </div>
+    </section>
+
+    <!-- ===== SHARE ===== -->
+    <section id="view-share" class="view view-share" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="diary">‹</button>
+        <h1>分享预览</h1>
+        <span class="nav-spacer"></span>
+      </header>
+
+      <div id="share-card" class="share-card">
+        <div class="share-brand">
+          <span class="k-logo">K</span>
+          <div>
+            <strong>抗癌日记</strong>
+            <span class="heart-icon">♡</span>
+          </div>
+        </div>
+        <div id="share-image" class="share-image"></div>
+        <p class="share-quote">🍃 把这一天留给未来的自己 🍃</p>
+        <p class="share-sub">今天的坚强，是明天的礼物。</p>
+        <div id="share-text" class="share-text"></div>
+        <p class="share-closing">慢慢来，未来值得期待。 ♡</p>
+        <p class="share-footer">来自 抗癌日记 · 仅分享你选择的内容</p>
+      </div>
+
+      <div class="share-actions">
+        <button type="button" id="btn-copy-link" class="share-act"><span>💬</span>复制链接</button>
+        <button type="button" id="btn-moments" class="share-act"><span>🏞️</span>生成长图</button>
+        <button type="button" id="btn-save-album" class="share-act"><span>⬇️</span>保存相册</button>
+      </div>
+      <p class="privacy-pill">🔒 默认仅本机可见 · 演示数据不上传服务器</p>
+    </section>
+
+    <!-- ===== ME / BOOK simple ===== -->
+    <section id="view-book" class="view view-book" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="home">‹</button>
+        <h1>日记本</h1>
+        <span class="nav-spacer"></span>
+      </header>
+      <div id="book-list" class="diary-list pad"></div>
+    </section>
+
+    <section id="view-me" class="view view-me" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="home">‹</button>
+        <h1>我的</h1>
+        <span class="nav-spacer"></span>
+      </header>
+      <div class="me-card">
+        <p class="me-name">演示用户</p>
+        <p class="muted">账号 demo · 数据仅存本机</p>
+        <button type="button" id="btn-logout-me" class="btn-ghost btn-block">退出登录</button>
+        <button type="button" id="btn-clear-data" class="btn-danger-ghost btn-block">清空本机日记</button>
+      </div>
+    </section>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+  <div id="lightbox" class="lightbox" hidden>
+    <img id="lightbox-img" alt="长图预览" />
+    <div class="lightbox-actions">
+      <a id="lightbox-download" class="btn-primary" download="抗癌日记.png">下载图片</a>
+      <button type="button" id="lightbox-close" class="btn-ghost">关闭</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

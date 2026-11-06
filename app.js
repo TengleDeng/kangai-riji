@@ -326,7 +326,7 @@
       const dl = $("#lightbox-download");
       img.src = url;
       dl.href = url;
-      dl.download = filename || "抗癌日记.png";
+      dl.download = filename || "友爱日记.png";
       $("#lightbox").hidden = false;
     } catch (err) {
       console.error(err);
@@ -463,7 +463,7 @@
     });
 
     $("#btn-longimg").addEventListener("click", () => {
-      captureLongImage($("#diary-article"), "抗癌日记-详情.png");
+      captureLongImage($("#diary-article"), "友爱日记-详情.png");
     });
     $("#btn-share").addEventListener("click", () => showView("share"));
 
@@ -477,10 +477,10 @@
       }
     });
     $("#btn-moments").addEventListener("click", () => {
-      captureLongImage($("#share-card"), "抗癌日记-分享卡.png");
+      captureLongImage($("#share-card"), "友爱日记-分享卡.png");
     });
     $("#btn-save-album").addEventListener("click", () => {
-      captureLongImage($("#share-card"), "抗癌日记.png");
+      captureLongImage($("#share-card"), "友爱日记.png");
     });
 
     $("#lightbox-close").addEventListener("click", () => {

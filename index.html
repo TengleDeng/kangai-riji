@@ -48,29 +48,34 @@
         </div>
         <button type="button" class="icon-btn logout-btn" id="btn-logout" title="退出">退出</button>
       </header>
-      <p class="greeting">你好，今天也记录一点点</p>
+      <p class="greeting" id="home-greeting">你好，今天也记录一点点</p>
 
-      <button type="button" class="community-banner" id="btn-community-pick" data-goto="community">
-        <div class="community-banner-text">
-          <strong>社区今日精选</strong>
-          <span>同路人正在分享温暖日常 ›</span>
-        </div>
-        <span class="community-banner-ico">💬</span>
-      </button>
+      <!-- 记录者：连续天数 / 本周 / 心情回顾 -->
+      <button type="button" class="streak-card" id="home-streak"></button>
 
       <div class="hero-card" id="btn-start-record">
         <span class="badge"><span class="leaf-sm">🍃</span> 今日一记</span>
-        <p class="hero-text">记录今天的心情、小确幸与点滴感悟。可仅自己可见，也可分享到社区。</p>
+        <p class="hero-text" id="home-hero-text">不用写很多，记一句话、一张图、一个心情就好。</p>
         <div class="hero-actions">
-          <span class="chip"><span class="ico">📷</span> 拍照记录</span>
-          <span class="chip"><span class="ico">🎙️</span> 语音记录</span>
+          <span class="chip"><span class="ico">✏️</span> 记一句</span>
+          <span class="chip"><span class="ico">📷</span> 配张图</span>
+          <span class="chip"><span class="ico">😌</span> 选心情</span>
         </div>
         <button type="button" class="btn-primary btn-block">开始记录 ›</button>
       </div>
 
+      <!-- 分享者：收到的回应 -->
+      <div id="home-responses" class="responses-card" hidden></div>
+
       <div class="section-head">
-        <h2>我的日记</h2>
-        <span class="muted">本地保存</span>
+        <h2>社区今日精选</h2>
+        <button type="button" class="link-btn" id="btn-community-pick">去社区 ›</button>
+      </div>
+      <div id="home-picks" class="picks-row"></div>
+
+      <div class="section-head">
+        <h2>最近的日记</h2>
+        <button type="button" class="link-btn" data-goto-book>全部 ›</button>
       </div>
       <div id="diary-list" class="diary-list"></div>
       <p id="empty-hint" class="empty-hint" hidden>还没有日记。点上面「开始记录」，写下今天的一点点。</p>
@@ -102,7 +107,13 @@
 
       <!-- Feed -->
       <div id="cpanel-feed" class="cpanel">
+        <button type="button" class="composer-card" id="btn-compose-share">
+          <img class="avatar sm" id="composer-avatar" alt="" />
+          <span>今天想和同路人说点什么？</span>
+          <span class="composer-go">分享 ›</span>
+        </button>
         <div id="topic-chips" class="topic-chips"></div>
+        <p id="feed-summary" class="section-hint"></p>
         <div id="feed-list" class="feed-list"></div>
       </div>
 
@@ -113,7 +124,7 @@
 
       <!-- People -->
       <div id="cpanel-people" class="cpanel" hidden>
-        <p class="section-hint">根据共同话题为你推荐</p>
+        <p class="section-hint">根据共同话题与同城为你推荐 · 关注后 TA 的分享会出现在「关注」里</p>
         <div id="people-list" class="people-list"></div>
       </div>
 
@@ -135,8 +146,9 @@
       </header>
       <article id="post-article" class="post-article"></article>
       <div class="comment-block">
-        <h3 class="comment-title">评论</h3>
+        <h3 class="comment-title" id="comment-title">评论</h3>
         <div id="comment-list" class="comment-list"></div>
+        <div id="quick-replies" class="quick-replies"></div>
         <form id="comment-form" class="comment-form">
           <input id="comment-input" type="text" placeholder="说一句温暖的话…" maxlength="200" required />
           <button type="submit" class="btn-primary btn-sm">发送</button>
@@ -152,6 +164,7 @@
         <span class="nav-spacer"></span>
       </header>
       <div id="circle-hero" class="circle-hero"></div>
+      <div class="section-head"><h2>圈内动态</h2><span class="muted" id="circle-feed-count"></span></div>
       <div id="circle-feed" class="feed-list"></div>
     </section>
 
@@ -163,7 +176,7 @@
         <span class="nav-spacer"></span>
       </header>
       <div id="profile-hero" class="profile-hero"></div>
-      <div class="section-head"><h2>TA 的公开日记</h2></div>
+      <div class="section-head"><h2 id="profile-feed-title">TA 的公开日记</h2></div>
       <div id="profile-feed" class="feed-list"></div>
     </section>
 
@@ -176,6 +189,25 @@
       </header>
 
       <div class="record-body">
+        <div class="record-intro">
+          <strong id="record-intro-title">今天记一句就好</strong>
+          <span id="record-intro-sub">一句话、一张图、一个心情，都算记录。</span>
+        </div>
+
+        <div class="mood-card">
+          <p class="vis-label">此刻的心情</p>
+          <div id="mood-chips" class="mood-chips"></div>
+        </div>
+
+        <label class="text-field">
+          <span class="pencil">✏️</span>
+          <textarea id="raw-text" rows="3" placeholder="今天记一句就好…"></textarea>
+        </label>
+        <div class="prompt-row">
+          <span class="muted">不知道写什么？点一下：</span>
+          <div id="prompt-chips" class="prompt-chips"></div>
+        </div>
+
         <label class="photo-drop" id="photo-drop">
           <input type="file" id="photo-input" accept="image/*" capture="environment" multiple hidden />
           <div class="photo-drop-inner">
@@ -193,11 +225,6 @@
           <p id="voice-status" class="voice-status" hidden></p>
         </div>
 
-        <label class="text-field">
-          <span class="pencil">✏️</span>
-          <textarea id="raw-text" rows="3" placeholder="也可以打字…"></textarea>
-        </label>
-
         <div class="visibility-card">
           <p class="vis-label">可见性</p>
           <div class="vis-options" role="radiogroup">
@@ -211,13 +238,14 @@
             </label>
           </div>
           <div id="topic-pick" class="topic-pick" hidden>
-            <p class="vis-label">选择一个话题</p>
+            <p class="vis-label">选择一个话题 <span class="req">必选</span></p>
             <div id="record-topic-chips" class="topic-chips compact"></div>
+            <p class="vis-hint">分享后同路人可以点赞、抱抱、留言；不想继续公开，随时在日记本里改回「仅自己」。</p>
           </div>
         </div>
 
         <button type="button" id="btn-generate" class="btn-primary btn-block">生成日记 🍃</button>
-        <p class="demo-tip">演示：本地模板整理，不调用付费 AI</p>
+        <p class="demo-tip">演示：本地模板整理，不调用付费 AI · 日记只存本机</p>
       </div>
     </section>
 
@@ -234,10 +262,14 @@
         <div class="ornament">— 🍃 —</div>
         <div id="diary-images" class="diary-images"></div>
         <span class="ai-badge">✦ AI 已整理，可编辑</span>
-        <div id="diary-visibility-badge" class="vis-badge"></div>
+        <div class="diary-badges">
+          <div id="diary-visibility-badge" class="vis-badge"></div>
+          <div id="diary-mood-badge" class="vis-badge mood"></div>
+        </div>
         <div id="diary-body" class="diary-body"></div>
         <div id="diary-tags" class="diary-tags"></div>
       </article>
+      <div id="diary-community" class="diary-community" hidden></div>
 
       <div id="edit-panel" class="edit-panel" hidden>
         <textarea id="edit-title" rows="1" placeholder="标题"></textarea>
@@ -255,7 +287,7 @@
             </label>
           </div>
           <div id="edit-topic-pick" class="topic-pick" hidden>
-            <p class="vis-label">选择一个话题</p>
+            <p class="vis-label">选择一个话题 <span class="req">必选</span></p>
             <div id="edit-topic-chips" class="topic-chips compact"></div>
           </div>
         </div>
@@ -288,20 +320,22 @@
             <span class="heart-icon">♡</span>
           </div>
         </div>
+        <p id="share-date" class="share-date"></p>
         <div id="share-image" class="share-image"></div>
-        <p class="share-quote">🍃 把这一天留给未来的自己 🍃</p>
-        <p class="share-sub">今天的坚强，是明天的礼物。</p>
+        <h3 id="share-title" class="share-title"></h3>
         <div id="share-text" class="share-text"></div>
-        <p class="share-closing">慢慢来，未来值得期待。 ♡</p>
-        <p class="share-footer">来自 友爱日记 · 仅分享你选择的内容</p>
+        <p class="share-quote">想让你看见我的这一天</p>
+        <p class="share-sub">不用给建议，读完回我一句「我在」，我就被接住了。</p>
+        <p class="share-footer">来自 友爱日记 · 我只分享了我选择的内容</p>
       </div>
 
+      <p class="share-howto">发给家人朋友：生成长图后直接发微信，对方不用安装也不用登录。</p>
       <div class="share-actions">
-        <button type="button" id="btn-copy-link" class="share-act"><span>💬</span>复制链接</button>
-        <button type="button" id="btn-moments" class="share-act"><span>🏞️</span>生成长图</button>
-        <button type="button" id="btn-save-album" class="share-act"><span>⬇️</span>保存相册</button>
+        <button type="button" id="btn-moments" class="share-act primary"><span>🖼️</span>生成长图</button>
+        <button type="button" id="btn-copy-link" class="share-act"><span>📋</span>复制文字</button>
+        <button type="button" id="btn-share-community" class="share-act"><span>🌿</span><em id="share-community-label">也分享到社区</em></button>
       </div>
-      <p class="privacy-pill">🔒 默认仅本机可见 · 演示数据不上传服务器</p>
+      <p class="privacy-pill">🔒 长图只在本机生成 · 演示数据不上传服务器</p>
     </section>
 
     <!-- ===== BOOK / ME ===== -->
@@ -311,6 +345,9 @@
         <h1>日记本</h1>
         <span class="nav-spacer"></span>
       </header>
+      <div id="book-stats" class="book-stats"></div>
+      <div id="book-mood" class="mood-week"></div>
+      <div id="book-filter" class="topic-chips"></div>
       <div id="book-list" class="diary-list pad"></div>
       <nav class="tab-bar" data-tabs="main">
         <button type="button" class="tab" data-tab="home"><span>🏠</span>首页</button>
@@ -328,9 +365,29 @@
         <span class="nav-spacer"></span>
       </header>
       <div class="me-card">
-        <p class="me-name">演示用户</p>
-        <p class="muted">账号 demo · 日记与社区互动仅存本机</p>
-        <p class="me-stats" id="me-stats"></p>
+        <div class="me-head">
+          <img class="avatar" id="me-avatar" alt="" />
+          <div>
+            <p class="me-name">演示用户</p>
+            <p class="muted">账号 demo · 苏州 · 日记与社区互动仅存本机</p>
+          </div>
+        </div>
+        <div class="stat-grid" id="me-stats"></div>
+      </div>
+      <div class="me-section">
+        <div class="section-head"><h2>心情回顾 · 近 7 天</h2></div>
+        <div id="me-mood" class="mood-week"></div>
+      </div>
+      <div class="me-section">
+        <div class="section-head"><h2>我的分享收到的回应</h2><span class="muted" id="me-resp-count"></span></div>
+        <div id="me-responses" class="resp-list"></div>
+      </div>
+      <div class="me-section">
+        <div class="section-head"><h2>我加入的圈子 · 我关注的人</h2></div>
+        <div id="me-circles" class="me-chips"></div>
+        <div id="me-following" class="me-chips"></div>
+      </div>
+      <div class="me-card">
         <button type="button" id="btn-logout-me" class="btn-ghost btn-block">退出登录</button>
         <button type="button" id="btn-clear-data" class="btn-danger-ghost btn-block">清空本机日记与社区互动</button>
       </div>
@@ -345,6 +402,12 @@
   </div>
 
   <div id="toast" class="toast" hidden></div>
+  <div id="sheet" class="sheet-mask" hidden>
+    <div class="sheet" role="dialog" aria-modal="true">
+      <div class="sheet-grip"></div>
+      <div id="sheet-body"></div>
+    </div>
+  </div>
   <div id="lightbox" class="lightbox" hidden>
     <img id="lightbox-img" alt="长图预览" />
     <div class="lightbox-actions">

@@ -32,9 +32,9 @@
             <input id="login-pass" name="password" type="password" placeholder="请输入演示密码" required autocomplete="current-password" />
           </label>
           <p id="login-error" class="login-error" hidden>账号或密码不正确</p>
-          <button type="submit" class="btn-primary btn-block">进入日记</button>
+          <button type="submit" class="btn-primary btn-block">进入社区</button>
         </form>
-        <p class="login-note">演示门禁 · 数据仅保存在本机浏览器</p>
+        <p class="login-note">演示门禁 · 社区数据存本机浏览器 · 无服务端</p>
       </div>
     </section>
 
@@ -50,9 +50,17 @@
       </header>
       <p class="greeting">你好，今天也记录一点点</p>
 
+      <button type="button" class="community-banner" id="btn-community-pick" data-goto="community">
+        <div class="community-banner-text">
+          <strong>社区今日精选</strong>
+          <span>同路人正在分享温暖日常 ›</span>
+        </div>
+        <span class="community-banner-ico">💬</span>
+      </button>
+
       <div class="hero-card" id="btn-start-record">
         <span class="badge"><span class="leaf-sm">🍃</span> 今日一记</span>
-        <p class="hero-text">记录今天的心情、小确幸与点滴感悟。</p>
+        <p class="hero-text">记录今天的心情、小确幸与点滴感悟。可仅自己可见，也可分享到社区。</p>
         <div class="hero-actions">
           <span class="chip"><span class="ico">📷</span> 拍照记录</span>
           <span class="chip"><span class="ico">🎙️</span> 语音记录</span>
@@ -67,12 +75,96 @@
       <div id="diary-list" class="diary-list"></div>
       <p id="empty-hint" class="empty-hint" hidden>还没有日记。点上面「开始记录」，写下今天的一点点。</p>
 
-      <nav class="tab-bar">
+      <nav class="tab-bar" data-tabs="main">
         <button type="button" class="tab active" data-tab="home"><span>🏠</span>首页</button>
+        <button type="button" class="tab" data-tab="community"><span>💬</span>社区</button>
         <button type="button" class="tab" data-tab="record"><span>✏️</span>记录</button>
         <button type="button" class="tab" data-tab="book"><span>📖</span>日记本</button>
         <button type="button" class="tab" data-tab="me"><span>👤</span>我的</button>
       </nav>
+    </section>
+
+    <!-- ===== COMMUNITY ===== -->
+    <section id="view-community" class="view view-community" hidden>
+      <header class="top-bar">
+        <div class="brand-row">
+          <span class="leaf-icon">💬</span>
+          <h1>社区</h1>
+        </div>
+        <span class="muted demo-pill">演示数据</span>
+      </header>
+
+      <div class="community-subnav" role="tablist">
+        <button type="button" class="csub active" data-csub="feed">动态</button>
+        <button type="button" class="csub" data-csub="circles">小圈子</button>
+        <button type="button" class="csub" data-csub="people">同路人</button>
+      </div>
+
+      <!-- Feed -->
+      <div id="cpanel-feed" class="cpanel">
+        <div id="topic-chips" class="topic-chips"></div>
+        <div id="feed-list" class="feed-list"></div>
+      </div>
+
+      <!-- Circles -->
+      <div id="cpanel-circles" class="cpanel" hidden>
+        <div id="circle-list" class="circle-list"></div>
+      </div>
+
+      <!-- People -->
+      <div id="cpanel-people" class="cpanel" hidden>
+        <p class="section-hint">根据共同话题为你推荐</p>
+        <div id="people-list" class="people-list"></div>
+      </div>
+
+      <nav class="tab-bar" data-tabs="main">
+        <button type="button" class="tab" data-tab="home"><span>🏠</span>首页</button>
+        <button type="button" class="tab active" data-tab="community"><span>💬</span>社区</button>
+        <button type="button" class="tab" data-tab="record"><span>✏️</span>记录</button>
+        <button type="button" class="tab" data-tab="book"><span>📖</span>日记本</button>
+        <button type="button" class="tab" data-tab="me"><span>👤</span>我的</button>
+      </nav>
+    </section>
+
+    <!-- ===== POST DETAIL ===== -->
+    <section id="view-post" class="view view-post" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="community">‹</button>
+        <h1>动态详情</h1>
+        <span class="nav-spacer"></span>
+      </header>
+      <article id="post-article" class="post-article"></article>
+      <div class="comment-block">
+        <h3 class="comment-title">评论</h3>
+        <div id="comment-list" class="comment-list"></div>
+        <form id="comment-form" class="comment-form">
+          <input id="comment-input" type="text" placeholder="说一句温暖的话…" maxlength="200" required />
+          <button type="submit" class="btn-primary btn-sm">发送</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== CIRCLE DETAIL ===== -->
+    <section id="view-circle" class="view view-circle" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="community">‹</button>
+        <h1 id="circle-title">小圈子</h1>
+        <span class="nav-spacer"></span>
+      </header>
+      <div id="circle-hero" class="circle-hero"></div>
+      <div id="circle-feed" class="feed-list"></div>
+    </section>
+
+    <!-- ===== USER PROFILE ===== -->
+    <section id="view-profile" class="view view-profile" hidden>
+      <header class="nav-bar">
+        <button type="button" class="back-btn" data-back="community">‹</button>
+        <h1>同路人主页</h1>
+        <span class="nav-spacer"></span>
+      </header>
+      <div id="profile-hero" class="profile-hero"></div>
+      <div class="section-head"><h2>TA 的公开日记</h2></div>
+      <div id="profile-feed" class="feed-list"></div>
     </section>
 
     <!-- ===== RECORD ===== -->
@@ -106,6 +198,24 @@
           <textarea id="raw-text" rows="3" placeholder="也可以打字…"></textarea>
         </label>
 
+        <div class="visibility-card">
+          <p class="vis-label">可见性</p>
+          <div class="vis-options" role="radiogroup">
+            <label class="vis-opt">
+              <input type="radio" name="visibility" value="private" checked />
+              <span>🔒 仅自己</span>
+            </label>
+            <label class="vis-opt">
+              <input type="radio" name="visibility" value="public" />
+              <span>🌿 分享到社区</span>
+            </label>
+          </div>
+          <div id="topic-pick" class="topic-pick" hidden>
+            <p class="vis-label">选择一个话题</p>
+            <div id="record-topic-chips" class="topic-chips compact"></div>
+          </div>
+        </div>
+
         <button type="button" id="btn-generate" class="btn-primary btn-block">生成日记 🍃</button>
         <p class="demo-tip">演示：本地模板整理，不调用付费 AI</p>
       </div>
@@ -124,6 +234,7 @@
         <div class="ornament">— 🍃 —</div>
         <div id="diary-images" class="diary-images"></div>
         <span class="ai-badge">✦ AI 已整理，可编辑</span>
+        <div id="diary-visibility-badge" class="vis-badge"></div>
         <div id="diary-body" class="diary-body"></div>
         <div id="diary-tags" class="diary-tags"></div>
       </article>
@@ -131,6 +242,23 @@
       <div id="edit-panel" class="edit-panel" hidden>
         <textarea id="edit-title" rows="1" placeholder="标题"></textarea>
         <textarea id="edit-body" rows="8" placeholder="正文"></textarea>
+        <div class="visibility-card inline">
+          <p class="vis-label">可见性</p>
+          <div class="vis-options" role="radiogroup">
+            <label class="vis-opt">
+              <input type="radio" name="edit-visibility" value="private" />
+              <span>🔒 仅自己</span>
+            </label>
+            <label class="vis-opt">
+              <input type="radio" name="edit-visibility" value="public" />
+              <span>🌿 分享到社区</span>
+            </label>
+          </div>
+          <div id="edit-topic-pick" class="topic-pick" hidden>
+            <p class="vis-label">选择一个话题</p>
+            <div id="edit-topic-chips" class="topic-chips compact"></div>
+          </div>
+        </div>
         <div class="edit-actions">
           <button type="button" id="btn-cancel-edit" class="btn-ghost">取消</button>
           <button type="button" id="btn-save-edit" class="btn-primary">保存</button>
@@ -154,7 +282,7 @@
 
       <div id="share-card" class="share-card">
         <div class="share-brand">
-          <span class="k-logo">K</span>
+          <span class="k-logo">友</span>
           <div>
             <strong>友爱日记</strong>
             <span class="heart-icon">♡</span>
@@ -176,7 +304,7 @@
       <p class="privacy-pill">🔒 默认仅本机可见 · 演示数据不上传服务器</p>
     </section>
 
-    <!-- ===== ME / BOOK simple ===== -->
+    <!-- ===== BOOK / ME ===== -->
     <section id="view-book" class="view view-book" hidden>
       <header class="nav-bar">
         <button type="button" class="back-btn" data-back="home">‹</button>
@@ -184,6 +312,13 @@
         <span class="nav-spacer"></span>
       </header>
       <div id="book-list" class="diary-list pad"></div>
+      <nav class="tab-bar" data-tabs="main">
+        <button type="button" class="tab" data-tab="home"><span>🏠</span>首页</button>
+        <button type="button" class="tab" data-tab="community"><span>💬</span>社区</button>
+        <button type="button" class="tab" data-tab="record"><span>✏️</span>记录</button>
+        <button type="button" class="tab active" data-tab="book"><span>📖</span>日记本</button>
+        <button type="button" class="tab" data-tab="me"><span>👤</span>我的</button>
+      </nav>
     </section>
 
     <section id="view-me" class="view view-me" hidden>
@@ -194,10 +329,18 @@
       </header>
       <div class="me-card">
         <p class="me-name">演示用户</p>
-        <p class="muted">账号 demo · 数据仅存本机</p>
+        <p class="muted">账号 demo · 日记与社区互动仅存本机</p>
+        <p class="me-stats" id="me-stats"></p>
         <button type="button" id="btn-logout-me" class="btn-ghost btn-block">退出登录</button>
-        <button type="button" id="btn-clear-data" class="btn-danger-ghost btn-block">清空本机日记</button>
+        <button type="button" id="btn-clear-data" class="btn-danger-ghost btn-block">清空本机日记与社区互动</button>
       </div>
+      <nav class="tab-bar" data-tabs="main">
+        <button type="button" class="tab" data-tab="home"><span>🏠</span>首页</button>
+        <button type="button" class="tab" data-tab="community"><span>💬</span>社区</button>
+        <button type="button" class="tab" data-tab="record"><span>✏️</span>记录</button>
+        <button type="button" class="tab" data-tab="book"><span>📖</span>日记本</button>
+        <button type="button" class="tab active" data-tab="me"><span>👤</span>我的</button>
+      </nav>
     </section>
   </div>
 
@@ -210,6 +353,7 @@
     </div>
   </div>
 
+  <script src="data.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
